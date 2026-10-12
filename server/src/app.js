@@ -3,6 +3,8 @@ import cors from 'cors';
 import { AppError } from './errors/AppError.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
+import authRoutes from './routes/authRoutes.js';
+
 const app = express();
 
 // Standard middleware
@@ -17,6 +19,9 @@ app.get('/health', (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+// Authentication routes
+app.use('/auth', authRoutes);
 
 // Handle unhandled routes (404)
 app.all('*', (req, res, next) => {
