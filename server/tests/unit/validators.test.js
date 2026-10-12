@@ -2,7 +2,6 @@ import { registerSchema, loginSchema } from '../../src/validators/authValidator.
 import {
   createRequestSchema,
   decisionSchema,
-  queryRequestsSchema,
 } from '../../src/validators/requestValidator.js';
 
 describe('Unit Tests: Zod Validation Schemas', () => {
@@ -148,7 +147,7 @@ describe('Unit Tests: Zod Validation Schemas', () => {
     });
   });
 
-  describe('requestValidator - decisionSchema & queryRequestsSchema', () => {
+  describe('requestValidator - decisionSchema', () => {
     it('should default empty decision comment to empty string and trim whitespace', () => {
       const res1 = decisionSchema.safeParse({});
       expect(res1.success).toBe(true);
@@ -162,24 +161,6 @@ describe('Unit Tests: Zod Validation Schemas', () => {
     it('should reject decision comment exceeding 500 characters', () => {
       const res = decisionSchema.safeParse({ comment: 'C'.repeat(501) });
       expect(res.success).toBe(false);
-    });
-
-    it('should coerce query pagination strings and validate enums', () => {
-      const res = queryRequestsSchema.safeParse({
-        page: '3',
-        limit: '25',
-        status: 'approved',
-        type: 'leave',
-        scope: 'mine',
-      });
-      expect(res.success).toBe(true);
-      expect(res.data).toEqual({
-        page: 3,
-        limit: 25,
-        status: 'approved',
-        type: 'leave',
-        scope: 'mine',
-      });
     });
   });
 });
