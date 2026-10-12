@@ -1,11 +1,5 @@
 import { z } from 'zod';
 
-/**
- * Validation schema for creating a new leave or expense request.
- * Enforces conditional requirements based on the request type:
- * - Expense: requires a positive amount
- * - Leave: requires valid start and end dates where endDate >= startDate
- */
 export const createRequestSchema = z
   .object({
     type: z.enum(['leave', 'expense'], {
@@ -66,9 +60,6 @@ export const createRequestSchema = z
     }
   });
 
-/**
- * Validation schema for approval/rejection decision comments.
- */
 export const decisionSchema = z.object({
   comment: z
     .string()
@@ -76,15 +67,4 @@ export const decisionSchema = z.object({
     .max(500, 'Comment cannot exceed 500 characters')
     .optional()
     .default(''),
-});
-
-/**
- * Validation schema for query parameters on request list endpoints.
- */
-export const queryRequestsSchema = z.object({
-  page: z.coerce.number().int().min(1).default(1),
-  limit: z.coerce.number().int().min(1).max(100).default(10),
-  status: z.enum(['pending', 'approved', 'rejected', 'cancelled']).optional(),
-  type: z.enum(['leave', 'expense']).optional(),
-  scope: z.enum(['mine', 'pending_for_me', 'all']).optional(),
 });

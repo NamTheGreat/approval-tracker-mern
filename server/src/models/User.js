@@ -16,15 +16,12 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      match: [
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-        'Please provide a valid email address',
-      ],
+      match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Please provide a valid email address'],
     },
     passwordHash: {
       type: String,
       required: [true, 'Password hash is required'],
-      select: false, // Omitted by default to prevent accidental leakage
+      select: false,
     },
     role: {
       type: String,
@@ -36,14 +33,20 @@ const userSchema = new mongoose.Schema(
       index: true,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-// Method to verify candidate password against stored bcrypt hash
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.passwordHash);
+};
+
+userSchema.methods.toProfile = function () {
+  return {
+    id: this._id.toString(),
+    name: this.name,
+    email: this.email,
+    role: this.role,
+  };
 };
 
 export const User = mongoose.model('User', userSchema);

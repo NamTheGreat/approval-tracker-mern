@@ -17,16 +17,15 @@ describe('Unit Tests: AppError & Central Error Handler Middleware', () => {
   });
 
   describe('AppError Class', () => {
-    it('should set status to "fail" for 4xx codes and "error" for 5xx codes', () => {
+    it('should store message, statusCode, and details on Error instance', () => {
       const err400 = new AppError('Bad Input', 400, [{ field: 'email' }]);
+      expect(err400.message).toBe('Bad Input');
       expect(err400.statusCode).toBe(400);
-      expect(err400.status).toBe('fail');
-      expect(err400.isOperational).toBe(true);
       expect(err400.details).toEqual([{ field: 'email' }]);
 
-      const err500 = new AppError('Server Crash', 500);
+      const err500 = new AppError('Server Crash');
       expect(err500.statusCode).toBe(500);
-      expect(err500.status).toBe('error');
+      expect(err500.details).toBeNull();
     });
   });
 
