@@ -3,7 +3,7 @@ import * as authController from '../controllers/authController.js';
 import { validate } from '../middleware/validate.js';
 import { registerSchema, loginSchema } from '../validators/authValidator.js';
 import { loginRateLimiter } from '../middleware/rateLimiter.js';
-import { authenticate } from '../middleware/auth.js';
+import { authenticate, authorizeRoles } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -22,5 +22,18 @@ router.get('/me', authenticate, (req, res) => {
     },
   });
 });
+
+// Role-protected route (Manager or Admin only)
+router.get(
+  '/manager-check',
+  authenticate,
+  authorizeRoles('manager', 'admin'),
+  (req, res) => {
+    res.status(200).json({
+      success: true,
+      message: 'Access granted to manager/admin',
+    });
+  }
+);
 
 export default router;
