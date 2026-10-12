@@ -4,6 +4,7 @@ import { AppError } from './errors/AppError.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 import authRoutes from './routes/authRoutes.js';
+import requestRoutes from './routes/requestRoutes.js';
 
 const app = express();
 
@@ -22,6 +23,9 @@ app.get('/health', (req, res) => {
 
 // Authentication routes
 app.use('/auth', authRoutes);
+
+// Request & approval routes
+app.use('/requests', requestRoutes);
 
 // Handle unhandled routes (404)
 app.all('*', (req, res, next) => {
